@@ -3,8 +3,14 @@ let operator = null;
 let operand1 = null;
 let operand2 = null;
 let expectOperand1 = true;
+let divisionByZero = false;
 
 document.querySelector("#calculator").addEventListener("click", event => {
+    if (divisionByZero) {
+        divisionByZero = false;
+        clearAll();
+    }
+
     if (event.target.classList.contains("digit")) {
         populateMainDisplay(event.target.textContent);
     } else if (event.target.id === "clear") {
@@ -40,8 +46,13 @@ document.querySelector("#calculator").addEventListener("click", event => {
 });
 
 function showResult(result) {
-    operand1 = result;
-    displayMain.textContent = result;
+    if (operator === "divide" && operand2 === 0) {
+        displayMain.textContent = "oh no";
+        divisionByZero = true;
+    } else {
+        operand1 = result;
+        displayMain.textContent = result;
+    }
 }
 
 function populateMainDisplay(digit) {

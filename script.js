@@ -42,6 +42,16 @@ document.querySelector("#calculator").addEventListener("click", event => {
             operand1 = null;
             expectOperand1 = true;
         }
+    } else if (event.target.id === "negate") {
+        const negated = parseFloat(displayMain.textContent) * -1;
+
+        displayMain.textContent = negated;
+
+        if (expectOperand1) {
+            operand1 = negated;
+        } else {
+            operand2 = negated;
+        }
     }
 });
 

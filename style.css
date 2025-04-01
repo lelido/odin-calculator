@@ -44,6 +44,7 @@ button {
 #display #mini {
     font-size: 16px;
     color: rgb(179, 197, 194);
+    height: 20px;
 }
 
 #display #main {

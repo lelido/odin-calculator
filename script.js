@@ -1,4 +1,6 @@
 const displayMain = document.querySelector("#display #main");
+const displayMini = document.querySelector("#display #mini");
+let operatorSymbol = null;
 let operator = null;
 let operand1 = null;
 let operand2 = null;
@@ -28,6 +30,8 @@ document.querySelector("#calculator").addEventListener("click", event => {
 
         expectOperand1 = false;
         operator = event.target.id;
+        operatorSymbol = event.target.textContent;
+        populateMiniDisplay(operatorSymbol, operand1);
     } else if (event.target.id === "equals") {
         if (operator !== null) {
             if (operand1 === null) {
@@ -38,6 +42,7 @@ document.querySelector("#calculator").addEventListener("click", event => {
                 operand2 = operand1;
             }
 
+            populateMiniDisplay(operatorSymbol, operand1, operand2);
             showResult(operate(operator, operand1, operand2));
             operand1 = null;
             expectOperand1 = true;
@@ -54,6 +59,15 @@ document.querySelector("#calculator").addEventListener("click", event => {
         }
     }
 });
+
+function populateMiniDisplay(operator, operand1, operand2 = null) {
+    displayMini.textContent = `${operand1} ${operator}`;
+
+    if (operand2 !== null) {
+        operand2 = operand2 < 0 ? `(${operand2})` : operand2;
+        displayMini.textContent += ` ${operand2} =`;
+    }
+}
 
 function showResult(result) {
     if (operator === "divide" && operand2 === 0) {
@@ -75,6 +89,7 @@ function populateMainDisplay(digit) {
     }
 
     if (expectOperand1) {
+        displayMini.textContent = "";
         operand1 = parseFloat(displayMain.textContent);
     } else {
         operand2 = parseFloat(displayMain.textContent);
@@ -83,6 +98,8 @@ function populateMainDisplay(digit) {
 
 function clearAll() {
     displayMain.textContent = "0";
+    displayMini.textContent = "";
+    operatorSymbol = null;
     operator = null;
     operand1 = null;
     operand2 = null;

@@ -9,7 +9,6 @@ let divisionByZero = false;
 
 document.querySelector("#calculator").addEventListener("click", event => {
     if (divisionByZero) {
-        divisionByZero = false;
         clearAll();
     }
 
@@ -20,45 +19,55 @@ document.querySelector("#calculator").addEventListener("click", event => {
     } else if (event.target.id === "backspace") {
         removeLastDigit();
     } else if (event.target.classList.contains("operator")) {
-        if (expectOperand1) {
-            operand1 = parseFloat(displayMain.textContent);
-            operand2 = null;
-        } else if (operand2 !== null) {
-            showResult(operate(operator, operand1, operand2));
-            operand2 = null;
-        }
-
-        expectOperand1 = false;
-        operator = event.target.id;
-        operatorSymbol = event.target.textContent;
-        populateMiniDisplay(operatorSymbol, operand1);
+        onOperator(event.target);
     } else if (event.target.id === "equals") {
         if (operator !== null) {
-            if (operand1 === null) {
-                operand1 = parseFloat(displayMain.textContent);
-            }
-
-            if (operand2 === null) {
-                operand2 = operand1;
-            }
-
-            populateMiniDisplay(operatorSymbol, operand1, operand2);
-            showResult(operate(operator, operand1, operand2));
-            operand1 = null;
-            expectOperand1 = true;
+            onEquals();
         }
     } else if (event.target.id === "negate") {
-        const negated = parseFloat(displayMain.textContent) * -1;
-
-        displayMain.textContent = negated;
-
-        if (expectOperand1) {
-            operand1 = negated;
-        } else {
-            operand2 = negated;
-        }
+        negate(parseFloat(displayMain.textContent));
     }
 });
+
+function negate(number) {
+    displayMain.textContent = -number;
+
+    if (expectOperand1) {
+        operand1 = -number;
+    } else {
+        operand2 = -number;
+    }
+}
+
+function onEquals() {
+    if (operand1 === null) {
+        operand1 = parseFloat(displayMain.textContent);
+    }
+
+    if (operand2 === null) {
+        operand2 = operand1;
+    }
+
+    populateMiniDisplay(operatorSymbol, operand1, operand2);
+    showResult(operate(operator, operand1, operand2));
+    operand1 = null;
+    expectOperand1 = true;
+}
+
+function onOperator(button) {
+    if (expectOperand1) {
+        operand1 = parseFloat(displayMain.textContent);
+        operand2 = null;
+    } else if (operand2 !== null) {
+        showResult(operate(operator, operand1, operand2));
+        operand2 = null;
+    }
+
+    expectOperand1 = false;
+    operator = button.id;
+    operatorSymbol = button.textContent;
+    populateMiniDisplay(operatorSymbol, operand1);
+}
 
 function populateMiniDisplay(operator, operand1, operand2 = null) {
     displayMini.textContent = `${operand1} ${operator}`;
@@ -104,6 +113,7 @@ function clearAll() {
     operand1 = null;
     operand2 = null;
     expectOperand1 = true;
+    divisionByZero = false;
 }
 
 function removeLastDigit() {

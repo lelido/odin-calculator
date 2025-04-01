@@ -50,8 +50,8 @@ function showResult(result) {
         displayMain.textContent = "oh no";
         divisionByZero = true;
     } else {
-        operand1 = result;
-        displayMain.textContent = result;
+        operand1 = parseFloat(result.toFixed(10));
+        displayMain.textContent = operand1;
     }
 }
 

@@ -1,27 +1,71 @@
 const displayMain = document.querySelector("#display #main");
+let operator = null;
+let operand1 = null;
+let operand2 = null;
+let expectOperand1 = true;
 
 document.querySelector("#calculator").addEventListener("click", event => {
     if (event.target.classList.contains("digit")) {
         populateMainDisplay(event.target.textContent);
     } else if (event.target.id === "clear") {
-        clearMainDisplay();
+        clearAll();
     } else if (event.target.id === "backspace") {
         removeLastDigit();
+    } else if (event.target.classList.contains("operator")) {
+        if (expectOperand1) {
+            operand1 = parseFloat(displayMain.textContent);
+            operand2 = null;
+        } else if (operand2 !== null) {
+            showResult(operate(operator, operand1, operand2));
+            operand2 = null;
+        }
+
+        expectOperand1 = false;
+        operator = event.target.id;
+    } else if (event.target.id === "equals") {
+        if (operator !== null) {
+            if (operand1 === null) {
+                operand1 = parseFloat(displayMain.textContent);
+            }
+
+            if (operand2 === null) {
+                operand2 = operand1;
+            }
+
+            showResult(operate(operator, operand1, operand2));
+            operand1 = null;
+            expectOperand1 = true;
+        }
     }
 });
 
+function showResult(result) {
+    operand1 = result;
+    displayMain.textContent = result;
+}
+
 function populateMainDisplay(digit) {
-    if (displayMain.textContent === "0") {
-        displayMain.textContent = "";
+    if (displayMain.textContent === "0" ||
+        operand1 === null ||
+        operator !== null && operand2 === null) {
+        displayMain.textContent = digit;
+    } else if (displayMain.textContent.length < 13) {
+        displayMain.textContent += digit;
     }
 
-    if (displayMain.textContent.length < 13) {
-        displayMain.textContent += digit;
+    if (expectOperand1) {
+        operand1 = parseFloat(displayMain.textContent);
+    } else {
+        operand2 = parseFloat(displayMain.textContent);
     }
 }
 
-function clearMainDisplay() {
+function clearAll() {
     displayMain.textContent = "0";
+    operator = null;
+    operand1 = null;
+    operand2 = null;
+    expectOperand1 = true;
 }
 
 function removeLastDigit() {
@@ -36,16 +80,16 @@ function operate(operator, operand1, operand2) {
     let result;
 
     switch (operator) {
-        case "+":
+        case "add":
             result = add(operand1, operand2);
             break;
-        case "-":
+        case "subtract":
             result = subtract(operand1, operand2);
             break;
-        case "*":
+        case "multiply":
             result = multiply(operand1, operand2);
             break;
-        case "/":
+        case "divide":
             result = divide(operand1, operand2);
             break;
         default:

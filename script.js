@@ -1,3 +1,4 @@
+const MAX_DECIMAL_LENGTH = 10;
 const displayMain = document.querySelector("#display #main");
 const displayMini = document.querySelector("#display #mini");
 let operatorSymbol = null;
@@ -26,8 +27,20 @@ document.querySelector("#calculator").addEventListener("click", event => {
         }
     } else if (event.target.id === "negate") {
         negate(parseFloat(displayMain.textContent));
+    } else if (event.target.id === "percentage") {
+        percentage();
     }
 });
+
+function percentage() {
+    if (!expectOperand1) {
+        operand2 = parseFloat((operand1 / 100 * parseFloat(displayMain.textContent)).toFixed(MAX_DECIMAL_LENGTH));
+        displayMain.textContent = operand2;
+    } else if (operand2 !== null) {
+        operand1 = parseFloat((parseFloat(displayMain.textContent) / 100 * parseFloat(displayMain.textContent)).toFixed(MAX_DECIMAL_LENGTH));
+        displayMain.textContent = operand1;
+    }
+}
 
 function negate(number) {
     displayMain.textContent = -number;
@@ -83,7 +96,7 @@ function showResult(result) {
         displayMain.textContent = "oh no";
         divisionByZero = true;
     } else {
-        operand1 = parseFloat(result.toFixed(10));
+        operand1 = parseFloat(result.toFixed(MAX_DECIMAL_LENGTH));
         displayMain.textContent = operand1;
     }
 }

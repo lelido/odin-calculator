@@ -147,6 +147,12 @@ function removeLastDigit() {
     if (displayMain.textContent === "") {
         displayMain.textContent = "0";
     }
+
+    if (expectOperand1) {
+        operand1 = parseFloat(displayMain.textContent);
+    } else {
+        operand2 = parseFloat(displayMain.textContent)
+    }
 }
 
 function operate(operator, operand1, operand2) {

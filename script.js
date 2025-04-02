@@ -1,12 +1,91 @@
 const MAX_DECIMAL_LENGTH = 10;
 const displayMain = document.querySelector("#display #main");
 const displayMini = document.querySelector("#display #mini");
+const buttons = Array.from(document.querySelectorAll("#calculator button")).reduce((accumulator, button) => {
+    accumulator[button.id] = button;
+    return accumulator;
+}, {});
 let operatorSymbol = null;
 let operator = null;
 let operand1 = null;
 let operand2 = null;
 let expectOperand1 = true;
 let divisionByZero = false;
+
+document.querySelector("body").addEventListener("keydown", event => {
+    if ("0123456789/*-+%".includes(event.key)) {
+        switch (event.key) {
+            case "0":
+                buttons.zero.click();
+                break;
+            case "1":
+                buttons.one.click();
+                break;
+            case "2":
+                buttons.two.click();
+                break;
+            case "3":
+                buttons.three.click();
+                break;
+            case "4":
+                buttons.four.click();
+                break;
+            case "5":
+                buttons.five.click();
+                break;
+            case "6":
+                buttons.six.click();
+                break;
+            case "7":
+                buttons.seven.click();
+                break;
+            case "8":
+                buttons.eight.click();
+                break;
+            case "9":
+                buttons.nine.click();
+                break;
+            case "/":
+                buttons.divide.click();
+                break;
+            case "*":
+                buttons.multiply.click();
+                break;
+            case "-":
+                buttons.subtract.click();
+                break;
+            case "+":
+                buttons.add.click();
+                break;
+            case "%":
+                buttons.percentage.click();
+                break;
+        }
+    } else {
+        switch (event.code) {
+            case "Escape":
+                buttons.clear.click();
+                break;
+            case "Backspace":
+                buttons.backspace.click();
+                break;
+            case "Enter":
+            case "NumpadEnter":
+                event.preventDefault();
+            case "Equal":
+                buttons.equals.click();
+                break;
+            case "Backquote":
+                buttons.negate.click();
+                break;
+            case "NumpadDecimal":
+            case "Comma":
+            case "Period":
+                buttons.decimal.click();
+                break;
+        }
+    }
+});
 
 document.querySelector("#calculator").addEventListener("click", event => {
     if (divisionByZero) {

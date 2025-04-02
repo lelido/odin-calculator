@@ -29,6 +29,8 @@ document.querySelector("#calculator").addEventListener("click", event => {
         negate(parseFloat(displayMain.textContent));
     } else if (event.target.id === "percentage") {
         percentage();
+    } else if (event.target.id === "decimal") {
+        populateMainDisplay(".");
     }
 });
 
@@ -68,6 +70,10 @@ function onEquals() {
 }
 
 function onOperator(button) {
+    if (displayMain.textContent.slice(-1) === ".") {
+        displayMain.textContent = displayMain.textContent.slice(0, -1);
+    }
+
     if (expectOperand1) {
         operand1 = parseFloat(displayMain.textContent);
         operand2 = null;
@@ -105,9 +111,15 @@ function populateMainDisplay(digit) {
     if (displayMain.textContent === "0" ||
         operand1 === null ||
         operator !== null && operand2 === null) {
-        displayMain.textContent = digit;
+        if (digit === ".") {
+            displayMain.textContent = "0.";
+        } else {
+            displayMain.textContent = digit;
+        }
     } else if (displayMain.textContent.length < 13) {
-        displayMain.textContent += digit;
+        if (digit !== "." || digit === "." && !displayMain.textContent.includes(".")) {
+            displayMain.textContent += digit;
+        }
     }
 
     if (expectOperand1) {

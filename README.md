@@ -1,1 +1,3 @@
-# odin-calculator
+# Calculator
+
+Simple calculator. It has keyboard support too.
